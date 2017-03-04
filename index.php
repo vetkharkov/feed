@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once 'lib/db_connect.php';
 ?>
 <!doctype html>
@@ -7,11 +8,13 @@ include_once 'lib/db_connect.php';
     <meta charset="UTF-8">
     <meta name="author" content="vet">
     <title>DateBase</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
 </head>
 <body>
+<?php
+if (!empty($_SESSION['message'])) echo "<span class = 'label label-success'>" . $_SESSION['message'] . "</span>";
+
+?>
 <div class="container">
     <table class="table table-hover">
         <thead>
@@ -19,6 +22,8 @@ include_once 'lib/db_connect.php';
         <th>Заголовок</th>
         <th>Описание</th>
         <th>Ссылка</th>
+        <th>Удалить</th>
+        <th>Редактировать</th>
         </thead>
         <tbody>
         <?php
@@ -31,11 +36,14 @@ include_once 'lib/db_connect.php';
             echo "<td>" . $post->title . "</td>";
             echo "<td>" . $post->description . "</td>";
             echo "<td>" . "<a href='/show.php?id=$post->id'>Читать комментарии</a>" . "</td>";
+            echo "<td>" . "<a href='/delete.php?id=$post->id'>Удалить</a>" . "</td>";
+            echo "<td>" . "<a href='/edit_post.php?id=$post->id'>Редактировать</a>" . "</td>";
             echo "</tr>";
         }
         ?>
         </tbody>
     </table>
+    <a class = "btn btn-primary" href="/new_posts.php">Новый пост</a>
 </div>
 </body>
 </html>
