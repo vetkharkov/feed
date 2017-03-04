@@ -9,22 +9,15 @@
 session_start();
 include_once 'lib/db_connect.php';
 
-
 $id = $_GET['id'];
 $title = $_POST['title'];
 $description = $_POST['description'];
-
-//var_dump($_GET);echo "<br>";
-//echo $id;echo "<br>";
-//echo $title;echo "<br>";
-//echo $description;echo "<br>";
 
 $query = "UPDATE `posts` SET title = '$title' , description = '$description' WHERE id = '$id'";
 $result =  mysqli_query($connect , $query);
 if (!$result) {
     print_r(mysqli_error_list($connect));
 } else {
-    $_SESSION['message'] = 'Ваш пост сохранён ' . $title;
+    $_SESSION['message'] = ' Ваш пост сохранён ' . $title;
     return header('location:/');
 }
-//var_dump($_POST);

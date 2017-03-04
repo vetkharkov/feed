@@ -16,11 +16,11 @@ if (!empty($id)) {
     if (!$result) {
         print_r(mysqli_error_list($connect));
     } else {
-        $_SESSION['message'] = 'Ваш коммент удалён';
-        return header("location:../show.php?id=$post_id");
+        $_SESSION['message'] = ' Ваш комментарий удалён';
+        return header("location:/show.php?id=$post_id");
     }
 } else {
-    $_SESSION['message'] = 'Введите корректный id';
-    return header("location:../show.php?id=$post_id");
+    $_SESSION['message'] = ' Введите корректный id';
+    return header("location:/show.php?id=$post_id");
 }
 

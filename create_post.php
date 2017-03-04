@@ -16,7 +16,7 @@ $result =  mysqli_query($connect , $query);
 if (!$result) {
     print_r(mysqli_error_list($connect));
 } else {
-    $_SESSION['message'] = 'Ваш пост сохранён ' . $title;
+    $_SESSION['message'] = ' Ваш пост сохранён ' . $title;
     return header('location:/');
 }
 //var_dump($result);

@@ -6,22 +6,19 @@
  * Time: 20:45
  */
 session_start();
-include_once 'lib/db_connect.php';
+include_once 'lib/db_queries.php';
 
 $id = $_GET['id'];
 if (!empty($id)) {
-    $query = "DELETE FROM `posts` WHERE id = $id";
-    $result =  mysqli_query($connect , $query);
-    if (!$result) {
-        print_r(mysqli_error_list($connect));
+    if (!delete_record('posts' , 'id' , $id)) {
+        $_SESSION['message'] = " Ошибка удаления";
     } else {
-        $_SESSION['message'] = 'Ваш пост удалён';
-        return header('location:/');
+        $_SESSION['message'] = ' Ваш пост удалён';
     }
 } else {
-    $_SESSION['message'] = 'Введите корректный id';
-    return header('location:/');
+    $_SESSION['message'] = ' Введите корректный id';
 }
+return header('location:/');
 
 
 

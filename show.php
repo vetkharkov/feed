@@ -1,11 +1,9 @@
 <?php
 session_start();
-include_once 'lib/db_connect.php';
-$click = $_POST['click'];
-$show_id = $_GET ['id'];
-$query = mysqli_query($connect, "SELECT * FROM posts WHERE id = $show_id  LIMIT 1");
-$post = mysqli_fetch_object($query);
-$query_comments = mysqli_query($connect, "SELECT * FROM comments WHERE post_id = $show_id ");//выборка из таблицы comments
+include_once 'lib/db_queries.php';
+//var_dump($_POST);
+//die;
+$id_post = $_GET ['id'];
 ?>
 <!doctype html>
 <html lang="en">
@@ -16,11 +14,21 @@ $query_comments = mysqli_query($connect, "SELECT * FROM comments WHERE post_id =
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
 </head>
 <body>
-<?php
-if (!empty($_SESSION['message'])) echo "<span class = 'label label-success'>" . $_SESSION['message'] . "</span>";
-?>
 <div class="container">
-    <!------------------------Заголовок---и---Описание----------------------->
+    <div class="row">
+        <div class="col-md-2">
+            <a href='/' class="btn btn-success"><span class='glyphicon glyphicon-arrow-left'></span> Ссылка назад</a>
+        </div>
+        <div class="col-md-3 col-md-offset-7">
+            <?php
+            if (!empty($_SESSION['message'])) echo "<span class = 'label label-danger glyphicon glyphicon-envelope label label-success'>", " ", $_SESSION['message'], "</span>";
+            $post = select_records('posts', 'id', $id_post, true)
+            ?>
+        </div>
+    </div>
+</div>
+<!------------------------Заголовок---и---Описание----------------------->
+<div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-primary">
@@ -33,37 +41,39 @@ if (!empty($_SESSION['message'])) echo "<span class = 'label label-success'>" . 
             </div>
         </div>
     </div>
-
+</div>
+<!-----------------------Комментарии------------------------------>
+<div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <ul class="list-group">
-                <li class="list-group-item active">Комментарии</li>
-                <?php if (isset($_POST['click'])) {
-                    while ($post_comments = mysqli_fetch_object($query_comments)) {
-                        echo "<li class='list-group-item'>" . $post_comments->content . " " . "<a href='/commits/delete_comments.php?id=$post_comments->id&post_id=$show_id'><span class=\"glyphicon glyphicon-remove text-danger\"></span></a>" . " " . "<a href='/commits/edit_comment.php?id=$post_comments->id&post_id=$show_id'><span class=\"glyphicon glyphicon-pencil text-success\"></span></a>" . "</li>";
-                    }
-                } else {
-                    $post_comments = mysqli_fetch_object($query_comments);
-                    echo "<li class='list-group-item'>" . $post_comments->content . "</li>";
+            <h2 class="col-md-2 col-md-offset-3">Комментарии</h2>
+            <table class='table table-hover'>
+                <thead>
+                <th>ID</th>
+                <th>Комментарий</th>
+                <th>Удалить</th>
+                <th>Редактировать</th>
+                </thead>
+                <tbody>
+                <?php
+                foreach (select_records('comments', 'post_id', $id_post) as $post_comment) {
+                    echo '<tr>';
+                    echo '<td>', $post_comment->id, '</td>';
+                    echo '<td>', $post_comment->content, '</td>';
+                    echo '<td>', "<a href='/commits/delete_comments.php?id=$post_comment->id&post_id=$id_post'><span class='glyphicon glyphicon-remove text-danger'></span></a>", '</td>';
+                    echo '<td>', "<a href='/commits/edit_comment.php?id=$post_comment->id&post_id=$id_post'><span class='glyphicon glyphicon-pencil text-success'></span></a>", '</td>';
+                    echo '</tr>';
                 }
                 ?>
-                <li class='list-group-item'>
-                    <!----------------Показать все комментарии----------------------->
-                    <form action="" method="post">
-                        <input name="click" type="hidden"> </input>
-                        <input class="btn btn-success" type="submit" value="Показать все комментарии">
-                    </form>
-                </li>
-            </ul>
+                <tr>
+                    <td colspan="4">
+                        <a class="btn btn-primary" href="/commits/new_comment.php?id=<?= $post->id ?>">Новый
+                            комментарий</a>
+                    </td>
+                </tr>
+                </tbody>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-10">
-            <a class = "btn btn-primary" href="/commits/new_comment.php?id=<?= $post->id ?>">Новый комментарий</a>
-        </div>
-        <div class="col-md-2">
-            <a href='/' class="btn btn-success">Ссылка назад</a>
-        </div>
-    </div>
+</div>
 </body>
 </html>

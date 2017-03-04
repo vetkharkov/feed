@@ -1,6 +1,9 @@
 <?php
-ini_set('displey_errors',1);
-$connect = mysqli_connect('localhost','root','1980');//подключение к БД
+include_once 'config.php';
+ini_set('display_errors',1);
+$config = get_db_config();// получение user & password
+
+$connect = mysqli_connect('localhost' , $config ['user'] , $config ['password']);//подключение к БД
 
 if  (!$connect){
     die("Ошибка подключения:" . mysqli_connect_error($connect));

@@ -1,6 +1,7 @@
 <?php
 session_start();
-include_once 'lib/db_connect.php';
+include_once 'lib/flash_massages.php';
+include_once 'lib/db_queries.php';
 ?>
 <!doctype html>
 <html lang="en">
@@ -12,8 +13,9 @@ include_once 'lib/db_connect.php';
 </head>
 <body>
 <?php
-if (!empty($_SESSION['message'])) echo "<span class = 'label label-success'>" . $_SESSION['message'] . "</span>";
-
+echo "<span class = 'label label-danger glyphicon glyphicon-envelope label label-success'>";
+echo show_flash_message ('message') ;
+echo "</span>";
 ?>
 <div class="container">
     <table class="table table-hover">
@@ -27,17 +29,14 @@ if (!empty($_SESSION['message'])) echo "<span class = 'label label-success'>" . 
         </thead>
         <tbody>
         <?php
-        $query = mysqli_query($connect, "SELECT * FROM posts");//выборка из таблицы posts
-        $query_comments = mysqli_query($connect, "SELECT * FROM comments");//выборка из таблицы comments
-
-        while ($post = mysqli_fetch_object($query)) {
+        foreach (select_records('posts') as $post) {
             echo "<tr>";
-            echo "<td>" . $post->id . "</td>";
-            echo "<td>" . $post->title . "</td>";
-            echo "<td>" . $post->description . "</td>";
-            echo "<td>" . "<a href='/show.php?id=$post->id'>Читать комментарии</a>" . "</td>";
-            echo "<td>" . "<a href='/delete.php?id=$post->id'>Удалить</a>" . "</td>";
-            echo "<td>" . "<a href='/edit_post.php?id=$post->id'>Редактировать</a>" . "</td>";
+            echo "<td>" , $post->id , "</td>";
+            echo "<td>" , $post->title , "</td>";
+            echo "<td>" , $post->description , "</td>";
+            echo "<td>" , "<a href='/show.php?id=$post->id'>Читать комментарии</a>" , "</td>";
+            echo "<td>" , "<a href='/delete.php?id=$post->id'>Удалить</a>" , "</td>";
+            echo "<td>" , "<a href='/edit_post.php?id=$post->id'>Редактировать</a>" , "</td>";
             echo "</tr>";
         }
         ?>

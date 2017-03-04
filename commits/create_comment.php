@@ -16,6 +16,6 @@ $result =  mysqli_query($connect , $query);
 if (!$result) {
     print_r(mysqli_error_list($connect));
 } else {
-    $_SESSION['message'] = 'Ваш комментарий сохранён ' . $content;
-    return header("location:../show.php?id=$post_id");
+    $_SESSION['message'] = ' Ваш комментарий сохранён ' . $content;
+    return header("location:/show.php?id=$post_id");
 }
