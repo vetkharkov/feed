@@ -1,5 +1,7 @@
 <?php
 include_once 'db_connect.php';
+include_once 'flash_massages.php';
+
 /**
  * Created by PhpStorm.
  * User: vet
@@ -27,12 +29,21 @@ function select_records($table_name, $field_name = false, $params = false, $firs
 }
 
 //---------------------Удаление--записей--------------------------------------
-function delete_record($table_name, $field, $params)
+function delete_record($table_name, $field, $params, $post_id = '')
 {
     global $connect;
     $query_string = "DELETE FROM $table_name WHERE $field = $params";
     $result = mysqli_query($connect, $query_string);
-    return $result;
+    if (!empty($params)) {
+        if (!$result) {
+            set_flash_message(4);//Ошибка удаления
+        } else {
+            ($table_name == 'comments') ? set_flash_message(2) : set_flash_message(3);
+        }//                             Ваш комментарий удалён : Ваш пост удалён
+    } else {
+        set_flash_message(5);//Введите корректный id
+    }
+    return ($table_name == 'comments') ? header("location:/show.php?id=$post_id") : header('location:/');
 }
 
 //---------------------Редактирование--записей---------------------------------------------------
@@ -44,16 +55,15 @@ function edit_record($table_name, $post_id = false, $field_first, $params_first,
         $query_string .= " , $field_second='$params_second'";
     }
     $query_string .= " WHERE id='$post_id'";
-//    echo $query_string;die;
     $result = mysqli_query($connect, $query_string);
     if (!$result) {
         print_r(mysqli_error_list($connect));
     } else {
         if ($table_name == "posts") {
-            $_SESSION['message'] = ' Ваш пост сохранён';
+            set_flash_message(0, $params_first);//Ваш пост сохранён
             return header('location:/');
         } else {
-            $_SESSION['message'] = ' Ваш комментарий сохранён ';
+            set_flash_message(1, $params_second);//Ваш комментарий сохранён
             return header("location:/show.php?id=$params_first");
         }
     }
@@ -68,10 +78,10 @@ function create_record($table_name, $field_first, $params_first, $field_second, 
     if (!$result) {
         print_r(mysqli_error_list($connect));
     } elseif ($table_name == 'comments') {
-        $_SESSION['message'] = ' Ваш комментарий сохранён ' . $params_second;
+        set_flash_message(1, $params_second);//Ваш комментарий сохранён
         return header("location:/show.php?id=$params_first");
     } else {
-        $_SESSION['message'] = ' Ваш пост сохранён ' . $params_first;
+        set_flash_message(0, $params_first);//Ваш пост сохранён
         return header('location:/');
     }
 }

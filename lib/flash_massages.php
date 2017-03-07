@@ -1,11 +1,22 @@
 <?php
 session_start();
 
-function set_flash_message ($key , $message_text) {
-    $_SESSION[$key] = $message_text;
+function set_flash_message($key, $param = '')
+{
+    $message_text = [
+        ' Ваш пост сохранён ',
+        ' Ваш комментарий сохранён ',
+        ' Ваш комментарий удалён',
+        ' Ваш пост удалён',
+        ' Ошибка удаления',
+        ' Введите корректный id'
+    ];
+    $_SESSION['message'] = $message_text[$key] . $param;
 }
 
-function show_flash_message ($key) {
+
+function show_flash_message($key)
+{
     $message = '';
     if (!empty($_SESSION[$key])) {
         $message = $_SESSION[$key];
@@ -14,7 +25,8 @@ function show_flash_message ($key) {
     return $message;
 }
 
-function flash_exists ($key) {
+function flash_exists($key)
+{
     !empty($_SESSION[$key]);
 }
 
