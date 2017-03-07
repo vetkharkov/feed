@@ -14,7 +14,7 @@ include_once 'lib/db_queries.php';
 <body>
 <?php
 echo "<span class = 'label label-danger glyphicon glyphicon-envelope label label-success'>";
-echo show_flash_message ('message') ;
+echo show_flash_message ('message');
 echo "</span>";
 ?>
 <div class="container">
@@ -29,6 +29,11 @@ echo "</span>";
         </thead>
         <tbody>
         <?php
+        if (!select_records('posts')) {
+            echo '<tr>';
+            echo '<td colspan="6">' , 'Посты отсутствуют!' , '</td>';
+            echo '</tr>';
+        }
         foreach (select_records('posts') as $post) {
             echo "<tr>";
             echo "<td>" , $post->id , "</td>";

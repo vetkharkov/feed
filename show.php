@@ -1,9 +1,9 @@
 <?php
 session_start();
+include_once 'lib/flash_massages.php';
 include_once 'lib/db_queries.php';
-//var_dump($_POST);
-//die;
 $id_post = $_GET ['id'];
+$post = select_records('posts', 'id', $id_post, true);
 ?>
 <!doctype html>
 <html lang="en">
@@ -21,8 +21,9 @@ $id_post = $_GET ['id'];
         </div>
         <div class="col-md-3 col-md-offset-7">
             <?php
-            if (!empty($_SESSION['message'])) echo "<span class = 'label label-danger glyphicon glyphicon-envelope label label-success'>", " ", $_SESSION['message'], "</span>";
-            $post = select_records('posts', 'id', $id_post, true)
+            echo "<span class = 'label label-danger glyphicon glyphicon-envelope label label-success'>";
+            echo show_flash_message('message');
+            echo "</span>";
             ?>
         </div>
     </div>
@@ -56,6 +57,11 @@ $id_post = $_GET ['id'];
                 </thead>
                 <tbody>
                 <?php
+                if (!select_records('comments', 'post_id', $id_post)) {
+                    echo '<tr>';
+                    echo '<td colspan="4">', 'Комментарии отсутствуют!', '</td>';
+                    echo '</tr>';
+                }
                 foreach (select_records('comments', 'post_id', $id_post) as $post_comment) {
                     echo '<tr>';
                     echo '<td>', $post_comment->id, '</td>';

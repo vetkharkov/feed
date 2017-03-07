@@ -12,23 +12,6 @@ $id = $_GET['id'];
 $query = mysqli_query($connect, "SELECT * FROM posts WHERE id = $id  LIMIT 1");
 $post = mysqli_fetch_object($query);
 
-
-
-
-//if (!empty($id)) {
-//    $query = "SELECT * FROM `posts` WHERE id = $id";
-//    $result =  mysqli_query($connect , $query);
-//    if (!$post = mysqli_fetch_object($result)) {
-//        $_SESSION['message'] = 'Ваш пост 404';
-//        return header('location:/');
-//    } else {
-//        $_SESSION['message'] = 'Ваш пост удалён';
-//        return header('location:/');
-//    }
-//} else {
-//    $_SESSION['message'] = 'Введите корректный id';
-//    return header('location:/');
-//}
 ?>
 <html>
 <head>
@@ -45,7 +28,8 @@ $post = mysqli_fetch_object($query);
             <div class="form-group">
                 <label for="input1" class="col-sm-2 control-label">Заголовок</label>
                 <div class="col-sm-10">
-                    <input type="text" name="title" class="form-control" id="input1" value="<?= $post->title ?>" placeholder="<?= $post->title ?>"/>
+                    <input type="text" name="title" class="form-control" id="input1" value="<?= $post->title ?>"
+                           placeholder="<?= $post->title ?>"/>
                 </div>
             </div>
 
@@ -62,8 +46,3 @@ $post = mysqli_fetch_object($query);
 </div>
 </body>
 </html>
-
-
-
-
-
