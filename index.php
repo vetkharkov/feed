@@ -29,12 +29,13 @@ echo "</span>";
         </thead>
         <tbody>
         <?php
-        if (!select_records('posts')) {
+        $res = select_records('posts');
+        if (!$res) {
             echo '<tr>';
             echo '<td colspan="6">' , 'Посты отсутствуют!' , '</td>';
             echo '</tr>';
         }
-        foreach (select_records('posts') as $post) {
+        foreach ($res as $post) {
             echo "<tr>";
             echo "<td>" , $post->id , "</td>";
             echo "<td>" , $post->title , "</td>";

@@ -57,12 +57,13 @@ $post = select_records('posts', 'id', $id_post, true);
                 </thead>
                 <tbody>
                 <?php
-                if (!select_records('comments', 'post_id', $id_post)) {
+                $res = select_records('comments', 'post_id', $id_post);
+                if (!$res) {
                     echo '<tr>';
                     echo '<td colspan="4">', 'Комментарии отсутствуют!', '</td>';
                     echo '</tr>';
                 }
-                foreach (select_records('comments', 'post_id', $id_post) as $post_comment) {
+                foreach ($res as $post_comment) {
                     echo '<tr>';
                     echo '<td>', $post_comment->id, '</td>';
                     echo '<td>', $post_comment->content, '</td>';
