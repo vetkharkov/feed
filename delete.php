@@ -11,5 +11,6 @@ include_once 'lib/db_queries.php';
 
 $id = $_GET['id'];
 
-delete_record('posts', 'id', $id);
+delete_record('comments', 'post_id', $id);//Удаляем все комментарии
+delete_record('posts', 'id', $id);//а потом post
 

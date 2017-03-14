@@ -46,43 +46,79 @@ function delete_record($table_name, $field, $params, $post_id = '')
     return ($table_name == 'comments') ? header("location:/show.php?id=$post_id") : header('location:/');
 }
 
-//---------------------Редактирование--записей---------------------------------------------------
-function edit_record($table_name, $post_id = false, $field_first, $params_first, $field_second = false, $params_second = false)
-{
-    global $connect;
-    $query_string = "UPDATE $table_name SET $field_first='$params_first'";
-    if ($field_second && $params_second) {
-        $query_string .= " , $field_second='$params_second'";
-    }
-    $query_string .= " WHERE id='$post_id'";
-    $result = mysqli_query($connect, $query_string);
-    if (!$result) {
-        print_r(mysqli_error_list($connect));
-    } else {
-        if ($table_name == "posts") {
-            set_flash_message(0, $params_first);//Ваш пост сохранён
-            return header('location:/');
-        } else {
-            set_flash_message(1, $params_second);//Ваш комментарий сохранён
-            return header("location:/show.php?id=$params_first");
-        }
-    }
-}
-
 //---------------------Создание--записей--------------------
-function create_record($table_name, $field_first, $params_first, $field_second, $params_second)
+
+function create_record($table_name, $params)
 {
     global $connect;
-    $query_string = "INSERT INTO $table_name ($field_first, $field_second) VALUES ('$params_first' , '$params_second')";
-    $result = mysqli_query($connect, $query_string);
-    if (!$result) {
-        print_r(mysqli_error_list($connect));
-    } elseif ($table_name == 'comments') {
-        set_flash_message(1, $params_second);//Ваш комментарий сохранён
-        return header("location:/show.php?id=$params_first");
-    } else {
-        set_flash_message(0, $params_first);//Ваш пост сохранён
-        return header('location:/');
-    }
+    if (empty($params)) return false;
+    $keys = implode(', ', array_keys($params));
+    $values = array_map(function ($val) use ($connect) {
+        return '\'' . mysqli_real_escape_string($connect, $val) . '\'';
+    }, $params);
+    $values = implode(', ', $values);
+    $field_names = '(' . $keys . ')';
+    $field_values = ' VALUES (' . $values . ')';
+    $query_string = "INSERT INTO `$table_name` " . $field_names . $field_values;
+    return mysqli_query($connect, $query_string);
 }
 
+//-------------------------------------------------------
+function my_create_record($table_name, $params)
+{
+    global $connect;
+    $field = '';
+    $value = '';
+    if (!$params) return false;
+    foreach ($params as $key => $val) {
+        $field .= $key . ',';
+        $val = addslashes($val);//экранируем кавычки
+        $value .= '"' . $val . '"' . ',';
+    }
+    $field = substr($field, 0, -1);//удаляем лишнюю
+    $value = substr($value, 0, -1);//запятую
+    $query_string = "INSERT INTO $table_name " . "(" . $field . ")" . " VALUES  " . "(" . $value . ")";
+    return mysqli_query($connect, $query_string);
+}
+
+//---------------------Редактирование--записей---------------------
+function update_record($table_name, $params, $field_name = '')
+{
+    global $connect;
+    $query_string = "UPDATE `$table_name` SET ";
+    $force_id = null;
+    if (array_key_exists('id', $params)) {
+        $force_id = $params['id'];
+        unset($params['id']);
+    }
+    array_walk($params, function (&$value, $key) use ($connect, $query_string) {
+        $value = "$key = '" . mysqli_real_escape_string($connect, $value) . '\'';
+    });
+    $query_string .= implode($params, ', ');
+    if (($field_name && $params[$field_name]) || $force_id) {
+        if (!$field_name || ($field_name && !array_key_exists($field_name, $params))) {
+            $field_name = 'id';
+            $field_value = mysqli_real_escape_string($connect, $force_id);
+        } else {
+            $field_value = mysqli_real_escape_string($connect, $params[$field_name]);
+        }
+        $query_string .= "WHERE $field_name = $field_value";
+    }
+    return mysqli_query($connect, $query_string);
+}
+
+//------------------------------------------------------------------
+function my_update_record($table_name, $params, $field_query = "id") {
+    global $connect;
+    $field = '';
+    $id = $params[$field_query];
+    $query_string = "UPDATE `$table_name` SET ";
+    if (!$params) return false;
+    foreach ($params as $key => $val) {
+        $val = addslashes($val);//экранируем кавычки
+        $field .= $key . "=" . "'" . $val . "'" . ",";
+    }
+    $field = substr($field, 0, -1);//удаляем лишнюю запятую
+    $query_string .= $field . " WHERE $field_query=$id";
+    return mysqli_query($connect, $query_string);
+}

@@ -4,4 +4,11 @@ function get_db_config () {
             'password' => 'some_password'
     ] ;
 }
+
+function get_user_info(){
+    return [
+        'login'=>'some_log',
+        'password'=>'some_password'
+    ];
+}
 ?>

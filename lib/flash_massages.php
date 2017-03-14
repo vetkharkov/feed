@@ -9,7 +9,10 @@ function set_flash_message($key, $param = '')
         ' Ваш комментарий удалён',
         ' Ваш пост удалён',
         ' Ошибка удаления',
-        ' Введите корректный id'
+        ' Введите корректный id',
+        ' Вы должны заполнить все поля',
+        ' Ошибка логина или пароля',
+        ' Спасибо за вход!'
     ];
     $_SESSION['message'] = $message_text[$key] . $param;
 }
@@ -27,6 +30,7 @@ function show_flash_message($key)
 
 function flash_exists($key)
 {
-    !empty($_SESSION[$key]);
+    return !empty($_SESSION[$key]);
+
 }
 

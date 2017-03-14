@@ -8,23 +8,27 @@ $post = select_records('posts', 'id', $id_post, true);
 <!doctype html>
 <html lang="en">
 <head>
+    <title>Show</title>
     <meta charset="UTF-8">
     <meta name="author" content="vet">
-    <title>Show</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-md-2">
-            <a href='/' class="btn btn-success"><span class='glyphicon glyphicon-arrow-left'></span> Ссылка назад</a>
+        <div class="col-md-1">
+            <a href='/' class="btn btn-success"><span class='glyphicon glyphicon-home'></span> На главную</a>
         </div>
-        <div class="col-md-3 col-md-offset-7">
-            <?php
-            echo "<span class = 'label label-danger glyphicon glyphicon-envelope label label-success'>";
-            echo show_flash_message('message');
-            echo "</span>";
-            ?>
+        <div class="col-md-2 col-md-offset-8">
+            <span class='label label-danger glyphicon glyphicon-envelope label label-success'>
+                <?php
+                if (flash_exists('message')) {
+                    echo show_flash_message('message');
+                } else {
+                    echo " ";
+                }
+                ?>
+            </span>
         </div>
     </div>
 </div>

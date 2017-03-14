@@ -5,13 +5,11 @@
  * Date: 01.03.17
  * Time: 21:17
  */
-session_start();
-include_once 'lib/db_connect.php';
+include_once 'lib/db_queries.php';
 
 $id = $_GET['id'];
-$query = mysqli_query($connect, "SELECT * FROM posts WHERE id = $id  LIMIT 1");
-$post = mysqli_fetch_object($query);
 
+$post = select_records('posts', 'id', $id ,true);
 ?>
 <html>
 <head>
