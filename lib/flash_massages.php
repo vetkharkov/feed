@@ -12,7 +12,7 @@ function set_flash_message($key, $param = '')
         ' Введите корректный id',
         ' Вы должны заполнить все поля',
         ' Ошибка логина или пароля',
-        ' Спасибо за вход!'
+        ' Добро пожаловать!'
     ];
     $_SESSION['message'] = $message_text[$key] . $param;
 }
