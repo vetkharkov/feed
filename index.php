@@ -1,6 +1,6 @@
 <?php
-session_start();
 include_once 'lib/flash_massages.php';
+require_once 'lib/auth_check.php';
 include_once 'lib/db_queries.php';
 ?>
 <!doctype html>
@@ -14,9 +14,15 @@ include_once 'lib/db_queries.php';
 <body>
 <div class="container">
     <div class="row">
-        <div class="col-md-1">
-            <a href='/login/index.php' class="btn btn-success"><span class='glyphicon glyphicon-user'></span> Log</a>
-        </div>
+        <?php if (user_exists()): ?>
+            <div class="col-md-2 ">
+                <a class="btn btn-primary" href="/login/user_auth_delete.php">Выход</a>
+            </div>
+        <?php else: ?>
+            <div class="col-md-2 ">
+                <a class="btn btn-primary" href="/login/">Вход</a>
+            </div>
+        <?php endif; ?>
         <div class="col-md-2 col-md-offset-8">
             <span class='label label-danger glyphicon glyphicon-envelope label label-success'>
                 <?php
@@ -54,8 +60,13 @@ include_once 'lib/db_queries.php';
             echo "<td>", $post->title, "</td>";
             echo "<td>", $post->description, "</td>";
             echo "<td>", "<a href='/show.php?id=$post->id'>Читать комментарии</a>", "</td>";
-            echo "<td>", "<a href='/delete.php?id=$post->id'><span class='glyphicon glyphicon-remove text-danger'></span></a>", "</td>";
-            echo "<td>", "<a href='/edit_post.php?id=$post->id'><span class='glyphicon glyphicon-pencil text-success'></span></a>", "</td>";
+            if (user_exists()) {
+                echo "<td>", "<a href='/delete.php?id=$post->id'><span class='glyphicon glyphicon-remove text-danger'></span></a>", "</td>";
+                echo "<td>", "<a href='/edit_post.php?id=$post->id'><span class='glyphicon glyphicon-pencil text-success'></span></a>", "</td>";
+            } else {
+                echo "<td align='center'>x</td>";
+                echo "<td align='center'>x</td>";
+            }
             echo "</tr>";
         }
         ?>

@@ -5,7 +5,9 @@
  * Date: 11.03.17
  * Time: 14:39
  */
+require_once '../lib/auth_check.php';
 require_once '../lib/flash_massages.php';
+redirect_if_user_auth();
 ?>
 <html>
 <head>

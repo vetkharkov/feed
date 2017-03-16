@@ -17,7 +17,7 @@
 <body>
 <div class="container">
     <div class="row">
-        <form method="post" action="/create_post.php" class="form-horizontal col-md-6 col-md-offset-3">
+        <form method="post" enctype="multipart/form-data" action="/create_post.php" class="form-horizontal col-md-6 col-md-offset-3">
             <h2>Добавить новый пост</h2>
             <div class="form-group">
                 <label for="input1" class="col-sm-2 control-label">Заголовок</label>
@@ -31,6 +31,12 @@
                 <div class="col-sm-10">
                     <textarea name="description" class="form-control" id="description"
                               placeholder="Содержание..."></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="file" class="col-sm-2 control-label">Файл</label>
+                <div class="col-sm-10">
+                    <input type="file" name="file" class="form-control" id="file" placeholder="Выберите файл"/>
                 </div>
             </div>
             <input type="submit" class="btn btn-primary col-md-4 col-md-offset-8" value="Сохранить"/>

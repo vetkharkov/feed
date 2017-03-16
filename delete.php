@@ -5,9 +5,10 @@
  * Date: 01.03.17
  * Time: 20:45
  */
-session_start();
 
 include_once 'lib/db_queries.php';
+include_once 'lib/auth_check.php';
+check_user_auth();
 
 $id = $_GET['id'];
 

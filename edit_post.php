@@ -5,7 +5,10 @@
  * Date: 01.03.17
  * Time: 21:17
  */
-include_once 'lib/db_queries.php';
+require_once 'lib/auth_check.php';
+check_user_auth();
+require_once 'lib/db_queries.php';
+require_once 'lib/flash_massages.php';
 
 $id = $_GET['id'];
 

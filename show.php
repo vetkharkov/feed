@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'lib/auth_check.php';
 include_once 'lib/flash_massages.php';
 include_once 'lib/db_queries.php';
 $id_post = $_GET ['id'];
@@ -71,8 +72,13 @@ $post = select_records('posts', 'id', $id_post, true);
                     echo '<tr>';
                     echo '<td>', $post_comment->id, '</td>';
                     echo '<td>', $post_comment->content, '</td>';
-                    echo '<td>', "<a href='/commits/delete_comments.php?id=$post_comment->id&post_id=$id_post'><span class='glyphicon glyphicon-remove text-danger'></span></a>", '</td>';
-                    echo '<td>', "<a href='/commits/edit_comment.php?id=$post_comment->id&post_id=$id_post'><span class='glyphicon glyphicon-pencil text-success'></span></a>", '</td>';
+                    if (user_exists()) {
+                        echo '<td>', "<a href='/commits/delete_comments.php?id=$post_comment->id&post_id=$id_post'><span class='glyphicon glyphicon-remove text-danger'></span></a>", '</td>';
+                        echo '<td>', "<a href='/commits/edit_comment.php?id=$post_comment->id&post_id=$id_post'><span class='glyphicon glyphicon-pencil text-success'></span></a>", '</td>';
+                    } else {
+                        echo "<td align='center'>x</td>";
+                        echo "<td align='center'>x</td>";
+                    }
                     echo '</tr>';
                 }
                 ?>
